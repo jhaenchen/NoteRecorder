@@ -158,7 +158,7 @@ namespace MicAndNotes
 
         private void FromCursor_Click(object sender, RoutedEventArgs e)
         {
-            string textArchive = Textbox.Text;
+            
             var toStart = new TimeSpan();
             int toPlayIndex = Textbox.CaretIndex;
             int lineIndex = Textbox.GetLineIndexFromCharacterIndex(toPlayIndex);
@@ -180,8 +180,17 @@ namespace MicAndNotes
 
 
 
-            var playbackStartPoint = toStart;
-            forUseByBackgroundWorker forPlayback = new forUseByBackgroundWorker(toStart, savedRecordingAs + ".wav");
+            string textArchive = textBackup;
+            
+            forUseByBackgroundWorker forPlayback = new forUseByBackgroundWorker(toStart, savedRecordingAs);
+
+            //var play = new MediaPlayer();
+
+            //play.Open(new Uri(forPlayback.filePath));
+            //play.Position = forPlayback.t;
+            //play.Play();
+
+
             bw.RunWorkerAsync(forPlayback);
             ThreadPool.QueueUserWorkItem(o =>
             {
@@ -197,7 +206,7 @@ namespace MicAndNotes
                     {
                         try
                         {
-                            if (playBackStopwatch.Elapsed + playbackStartPoint < timesForNote[counter].occurance)
+                            if (playBackStopwatch.Elapsed + toStart < timesForNote[counter].occurance)
                             {
                                 Textbox.Text = timesForNote[counter].note;
                                 theSlider.Value = timesForNote[counter].occurance.Ticks;
