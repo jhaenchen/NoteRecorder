@@ -259,7 +259,7 @@ namespace MicAndNotes
             var bFormatter = new BinaryFormatter();
             bFormatter.Serialize(stream, toSave);
             stream.Close();
-            File.Move(savedRecordingAs+".wav", saveFileDialog1.FileName + "\\recording.wav");
+            File.Move(savedRecordingAs, saveFileDialog1.FileName + "\\recording.wav");
         }
 
         private void OpenFileButton_Click(object sender, RoutedEventArgs e)
@@ -278,7 +278,7 @@ namespace MicAndNotes
                 textBackup = recoveredState.theNote;
                 recordingDuration = recoveredState.recordingDuration;
                 theSlider.Maximum = recordingDuration;
-                savedRecordingAs = Path.GetDirectoryName(openFileDialog1.FileName) + recoveredState.recordingFilename;
+                savedRecordingAs = recoveredState.recordingFilename;
             }
         }
         [Serializable]
