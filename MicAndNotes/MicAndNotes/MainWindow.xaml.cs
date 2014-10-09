@@ -90,13 +90,24 @@ namespace MicAndNotes
             play.Position = b.t;
             play.Play();
         }
-
+        MediaPlayer ClassPlayer = new MediaPlayer();
+        private bool shouldContinue = true;
         private void PlayBackButton_Click(object sender, RoutedEventArgs e)
         {
+            
+
+
             string textArchive = textBackup;
             var playbackStartPoint = new TimeSpan(0);
             forUseByBackgroundWorker forPlayback = new forUseByBackgroundWorker(playbackStartPoint,savedRecordingAs);
+            
+            
 
+            ClassPlayer.Open(new Uri(savedRecordingAs));
+            // play.Open(new Uri(@"C:\SAMProjects\NoteRecorder\MicAndNotes\MicAndNotes\bin\Release6f6e0b14-623b-4c87-9cfd-eb3cf49fbf0c.wav"));
+            ClassPlayer.Position = playbackStartPoint;
+            ClassPlayer.Play();
+            
             //var play = new MediaPlayer();
 
             //play.Open(new Uri(forPlayback.filePath));
@@ -104,10 +115,10 @@ namespace MicAndNotes
             //play.Play();
             
             
-            bw.RunWorkerAsync(forPlayback);
+            //bw.RunWorkerAsync(forPlayback);
             ThreadPool.QueueUserWorkItem(o =>
             {
-                bool shouldContinue = true;
+                shouldContinue = true;
                 int counter = 0;
                 var playBackStopwatch = new Stopwatch();
 
@@ -184,17 +195,16 @@ namespace MicAndNotes
             
             forUseByBackgroundWorker forPlayback = new forUseByBackgroundWorker(toStart, savedRecordingAs);
 
-            //var play = new MediaPlayer();
+            ClassPlayer.Open(new Uri(savedRecordingAs));
+            // play.Open(new Uri(@"C:\SAMProjects\NoteRecorder\MicAndNotes\MicAndNotes\bin\Release6f6e0b14-623b-4c87-9cfd-eb3cf49fbf0c.wav"));
+            ClassPlayer.Position = toStart;
+            ClassPlayer.Play();
 
-            //play.Open(new Uri(forPlayback.filePath));
-            //play.Position = forPlayback.t;
-            //play.Play();
 
-
-            bw.RunWorkerAsync(forPlayback);
+            //bw.RunWorkerAsync(forPlayback);
             ThreadPool.QueueUserWorkItem(o =>
             {
-                bool shouldContinue = true;
+                shouldContinue = true;
                 int counter = 0;
                 var playBackStopwatch = new Stopwatch();
 
@@ -335,6 +345,12 @@ namespace MicAndNotes
                 t = ts;
                 filePath = path;
             }
+        }
+
+        private void StopButton1_Click(object sender, RoutedEventArgs e)
+        {
+            ClassPlayer.Stop();
+            shouldContinue = false;
         }
     }
 }
