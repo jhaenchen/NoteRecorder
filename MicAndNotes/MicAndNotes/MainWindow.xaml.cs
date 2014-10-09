@@ -85,6 +85,7 @@ namespace MicAndNotes
             var play = new MediaPlayer();
 
             play.Open(new Uri(b.filePath));
+           // play.Open(new Uri(@"C:\SAMProjects\NoteRecorder\MicAndNotes\MicAndNotes\bin\Release6f6e0b14-623b-4c87-9cfd-eb3cf49fbf0c.wav"));
             play.Position = b.t;
             play.Play();
         }
@@ -93,7 +94,15 @@ namespace MicAndNotes
         {
             string textArchive = textBackup;
             var playbackStartPoint = new TimeSpan(0);
-            forUseByBackgroundWorker forPlayback = new forUseByBackgroundWorker(playbackStartPoint,savedRecordingAs+".wav");
+            forUseByBackgroundWorker forPlayback = new forUseByBackgroundWorker(playbackStartPoint,savedRecordingAs);
+
+            //var play = new MediaPlayer();
+
+            //play.Open(new Uri(forPlayback.filePath));
+            //play.Position = forPlayback.t;
+            //play.Play();
+            
+            
             bw.RunWorkerAsync(forPlayback);
             ThreadPool.QueueUserWorkItem(o =>
             {

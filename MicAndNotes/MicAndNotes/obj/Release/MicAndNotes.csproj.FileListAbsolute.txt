@@ -1,0 +1,12 @@
+C:\SAMProjects\NoteRecorder\MicAndNotes\MicAndNotes\bin\Release\MicAndNotes.exe.config
+C:\SAMProjects\NoteRecorder\MicAndNotes\MicAndNotes\bin\Release\MicAndNotes.exe
+C:\SAMProjects\NoteRecorder\MicAndNotes\MicAndNotes\bin\Release\MicAndNotes.pdb
+C:\SAMProjects\NoteRecorder\MicAndNotes\MicAndNotes\obj\Release\MainWindow.baml
+C:\SAMProjects\NoteRecorder\MicAndNotes\MicAndNotes\obj\Release\MainWindow.g.cs
+C:\SAMProjects\NoteRecorder\MicAndNotes\MicAndNotes\obj\Release\App.g.cs
+C:\SAMProjects\NoteRecorder\MicAndNotes\MicAndNotes\obj\Release\MicAndNotes_MarkupCompile.cache
+C:\SAMProjects\NoteRecorder\MicAndNotes\MicAndNotes\obj\Release\MicAndNotes.g.resources
+C:\SAMProjects\NoteRecorder\MicAndNotes\MicAndNotes\obj\Release\MicAndNotes.Properties.Resources.resources
+C:\SAMProjects\NoteRecorder\MicAndNotes\MicAndNotes\obj\Release\MicAndNotes.csproj.GenerateResource.Cache
+C:\SAMProjects\NoteRecorder\MicAndNotes\MicAndNotes\obj\Release\MicAndNotes.exe
+C:\SAMProjects\NoteRecorder\MicAndNotes\MicAndNotes\obj\Release\MicAndNotes.pdb
