@@ -352,6 +352,58 @@ namespace MicAndNotes
         {
             ClassPlayer.Stop();
             shouldContinue = false;
+
+
+            
+
+            //var play = new MediaPlayer();
+
+            //play.Open(new Uri(forPlayback.filePath));
+            //play.Position = forPlayback.t;
+            //play.Play();
+
+
+            //bw.RunWorkerAsync(forPlayback);
+            ThreadPool.QueueUserWorkItem(o =>
+            {
+                shouldContinue = true;
+                int counter = 0;
+                var playBackStopwatch = new Stopwatch();
+
+                playBackStopwatch.Start();
+                bool tempBoolWhy = true;
+                while (tempBoolWhy)
+                {
+                    Dispatcher.BeginInvoke(new Action(() =>
+                    {
+                        try
+                        {
+                            if (true)
+                            {
+                                Textbox.Text = textBackup;
+                                //theSlider.Value = 0;
+                                tempBoolWhy = false;
+
+                            }
+                            else
+                            {
+                                counter++;
+                            }
+                        }
+                        catch (Exception)
+                        {
+                            shouldContinue = false;
+                            
+                            Textbox.ScrollToEnd();
+                            theSlider.Value = 0;
+                        }
+                    }));
+                    Thread.Sleep(1);
+                }
+            });
+
+
+            
         }
     }
 }

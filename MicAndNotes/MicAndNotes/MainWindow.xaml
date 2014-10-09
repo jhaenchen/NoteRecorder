@@ -11,8 +11,8 @@ AcceptsReturn="True" KeyUp="TextBox_KeyUp"/>
         <Button x:Name="StopButton" Content="Stop Recording" HorizontalAlignment="Left" Margin="101,476,0,0" VerticalAlignment="Top" Width="111" Click="StopButton_Click"/>
         <Button x:Name="FromCursor" Content="From Cursor" HorizontalAlignment="Left" Margin="347,477,0,0" VerticalAlignment="Top" Width="107" Click="FromCursor_Click"/>
         <Slider x:Name="theSlider" HorizontalAlignment="Left" Margin="225,508,0,-0.4" VerticalAlignment="Top" Height="42" Width="417" ValueChanged="theSlider_ValueChanged"/>
-        <Button x:Name="SaveButton" Content="Save Note" HorizontalAlignment="Left" Margin="657,477,0,0" VerticalAlignment="Top" Width="75" Click="SaveButton_Click"/>
-        <Button x:Name="OpenFileButton" Content="Open" HorizontalAlignment="Left" Margin="737,477,0,0" VerticalAlignment="Top" Width="75" Click="OpenFileButton_Click"/>
+        <Button x:Name="SaveButton" Content="Save Note" HorizontalAlignment="Left" Margin="733,477,0,0" VerticalAlignment="Top" Width="75" Click="SaveButton_Click"/>
+        <Button x:Name="OpenFileButton" Content="Open" HorizontalAlignment="Left" Margin="813,477,0,0" VerticalAlignment="Top" Width="75" Click="OpenFileButton_Click"/>
         <Image x:Name="RecordingIcon" HorizontalAlignment="Left" Height="32" Margin="21,508,0,0" VerticalAlignment="Top" Width="44" Source="Images/recording.png" Visibility="Hidden"/>
         <Button x:Name="StopButton1" Content="Stop" HorizontalAlignment="Left" Margin="459,477,0,0" VerticalAlignment="Top" Width="75" Click="StopButton1_Click"/>
     </Grid>
