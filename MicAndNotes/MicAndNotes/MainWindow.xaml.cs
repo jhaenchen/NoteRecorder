@@ -274,7 +274,7 @@ namespace MicAndNotes
             if (saveFileDialog1.ShowDialog() != true) return;
             var toSave = new SaveObject(recordingDuration, timesForNote, textBackup, saveFileDialog1.FileName + "\\recording.wav");
             Directory.CreateDirectory(saveFileDialog1.FileName);
-            Stream stream = File.Open(saveFileDialog1.FileName+"\\data", FileMode.Create);
+            Stream stream = File.Open(saveFileDialog1.FileName+"\\data.nr", FileMode.Create);
             var bFormatter = new BinaryFormatter();
             bFormatter.Serialize(stream, toSave);
             stream.Close();
@@ -285,6 +285,7 @@ namespace MicAndNotes
         private void OpenFileButton_Click(object sender, RoutedEventArgs e)
         {
             var openFileDialog1 = new OpenFileDialog();
+            openFileDialog1.Filter = "Note Recorder Files|*.nr";
             DialogResult result = openFileDialog1.ShowDialog();
             if (result.ToString() == "OK") // Test result.
             {
@@ -366,11 +367,7 @@ namespace MicAndNotes
             //bw.RunWorkerAsync(forPlayback);
             ThreadPool.QueueUserWorkItem(o =>
             {
-                shouldContinue = true;
-                int counter = 0;
-                var playBackStopwatch = new Stopwatch();
-
-                playBackStopwatch.Start();
+                
                 bool tempBoolWhy = true;
                 while (tempBoolWhy)
                 {
@@ -378,16 +375,17 @@ namespace MicAndNotes
                     {
                         try
                         {
-                            if (true)
+                            if (tempBoolWhy)
                             {
                                 Textbox.Text = textBackup;
                                 //theSlider.Value = 0;
                                 tempBoolWhy = false;
+                                
 
                             }
                             else
                             {
-                                counter++;
+                               
                             }
                         }
                         catch (Exception)
