@@ -72,6 +72,7 @@ namespace MicAndNotes
 
         private void RecordButton_Click(object sender, RoutedEventArgs e)
         {
+            RecordingIcon.Visibility = Visibility.Visible;
             mciSendString("open new Type waveaudio Alias recsound", "", 0, 0);
             recordingTimer.Start();
             mciSendString("record recsound", "", 0, 0);
@@ -143,6 +144,7 @@ namespace MicAndNotes
 
         private void StopButton_Click(object sender, RoutedEventArgs e)
         {
+            RecordingIcon.Visibility = Visibility.Hidden;
             string savedFileName = Guid.NewGuid().ToString();
             savedRecordingAs = Environment.CurrentDirectory + savedFileName + ".wav";
             recordingTimer.Stop();

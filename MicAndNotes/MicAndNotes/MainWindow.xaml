@@ -13,5 +13,6 @@ AcceptsReturn="True" KeyUp="TextBox_KeyUp"/>
         <Slider x:Name="theSlider" HorizontalAlignment="Left" Margin="225,508,0,-0.4" VerticalAlignment="Top" Height="42" Width="417" ValueChanged="theSlider_ValueChanged"/>
         <Button x:Name="SaveButton" Content="Save Note" HorizontalAlignment="Left" Margin="615,477,0,0" VerticalAlignment="Top" Width="75" Click="SaveButton_Click"/>
         <Button x:Name="OpenFileButton" Content="Open" HorizontalAlignment="Left" Margin="737,477,0,0" VerticalAlignment="Top" Width="75" Click="OpenFileButton_Click"/>
+        <Image x:Name="RecordingIcon" HorizontalAlignment="Left" Height="32" Margin="21,508,0,0" VerticalAlignment="Top" Width="44" Source="Images/recording.png" Visibility="Hidden"/>
     </Grid>
 </Window>
