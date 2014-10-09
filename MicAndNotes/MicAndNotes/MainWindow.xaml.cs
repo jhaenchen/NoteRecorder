@@ -279,6 +279,7 @@ namespace MicAndNotes
             bFormatter.Serialize(stream, toSave);
             stream.Close();
             File.Move(savedRecordingAs, saveFileDialog1.FileName + "\\recording.wav");
+            File.Delete(savedRecordingAs);
         }
 
         private void OpenFileButton_Click(object sender, RoutedEventArgs e)
