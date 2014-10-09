@@ -399,9 +399,9 @@ namespace MicAndNotes
                     Thread.Sleep(1);
                 }
             });
-
-
             
+
+
         }
     }
 }
