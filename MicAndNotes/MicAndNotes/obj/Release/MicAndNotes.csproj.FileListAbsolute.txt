@@ -10,3 +10,4 @@ C:\SAMProjects\NoteRecorder\MicAndNotes\MicAndNotes\obj\Release\MicAndNotes.Prop
 C:\SAMProjects\NoteRecorder\MicAndNotes\MicAndNotes\obj\Release\MicAndNotes.csproj.GenerateResource.Cache
 C:\SAMProjects\NoteRecorder\MicAndNotes\MicAndNotes\obj\Release\MicAndNotes.exe
 C:\SAMProjects\NoteRecorder\MicAndNotes\MicAndNotes\obj\Release\MicAndNotes.pdb
+C:\SAMProjects\NoteRecorder\MicAndNotes\MicAndNotes\obj\Release\MicAndNotes.csprojResolveAssemblyReference.cache
