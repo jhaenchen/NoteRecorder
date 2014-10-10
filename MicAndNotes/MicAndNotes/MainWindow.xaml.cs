@@ -32,6 +32,7 @@ namespace MicAndNotes
         private List<TimeNote> _timesForNote = new List<TimeNote>();
         private bool _wasLastKeyEnter;
         private SaveObject currentSave = null;
+        private string currentOpenNoteLocation = null;
 
         public MainWindow()
         {
@@ -330,16 +331,47 @@ namespace MicAndNotes
                 _recordingDuration = recoveredState.RecordingDuration;
                 theSlider.Maximum = _recordingDuration;
                 _savedRecordingAs = Directory.GetCurrentDirectory()+ "\\CurrentWorkingDirectory" + "\\recording.wav";
+                currentSave = new SaveObject(_recordingDuration,_timesForNote,recoveredState.TheNote,_savedRecordingAs);
+                currentOpenNoteLocation = openFileDialog1.FileName;
             }
         }
 
         private void ToolbarSave_Click(object sender, RoutedEventArgs e)
         {
-            if(currentSave != null)
+            if (currentSave != null)
             {
                 
+                var toSave = new SaveObject(_recordingDuration, _timesForNote, _textBackup,
+                    currentSave.RecordingFilename);
+                try
+                {
+                    Directory.Delete("justASecond", true);
+                }
+                catch (DirectoryNotFoundException)
+                {
+                }
+                ZipFile.ExtractToDirectory(currentOpenNoteLocation, "justASecond");
+                DirectoryInfo t = new DirectoryInfo("justASecond");
+                File.Delete(t.FullName+"\\data.nr");
+                File.Delete(currentOpenNoteLocation);
+                
+                Stream stream = File.Open(t + "\\data.nr", FileMode.Create);
+                var bFormatter = new BinaryFormatter();
+                bFormatter.Serialize(stream, toSave);
+                stream.Close();
+                //File.Copy(_savedRecordingAs, t + "\\recording.wav");
+                //File.Move(_savedRecordingAs, t + "\\recording.wav");
+                File.Delete(_savedRecordingAs);
+                var zipFileName = Guid.NewGuid();
+                ZipFile.CreateFromDirectory(t.FullName, zipFileName.ToString());
+                //Directory.Delete(t.FullName, true);
+                File.Move(zipFileName.ToString(), currentOpenNoteLocation);
             }
-            
+            else
+            {
+                ToolbarSaveAs_Click(sender, e);
+            }
+
         }
 
         private void ToolbarClose_Click(object sender, RoutedEventArgs e)
