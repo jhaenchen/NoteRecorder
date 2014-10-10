@@ -54,7 +54,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="ForUseByBackgroundWorker.cs" />
     <Compile Include="SaveObject.cs" />
     <Compile Include="TimeNote.cs" />
     <Page Include="MainWindow.xaml">

@@ -34,10 +34,10 @@ namespace MicAndNotes
         public MainWindow()
         {
             InitializeComponent();
-            _bw.WorkerSupportsCancellation = false;
-            _bw.WorkerReportsProgress = false;
-            _bw.DoWork +=
-                bw_DoWork;
+            //_bw.WorkerSupportsCancellation = false;
+            //_bw.WorkerReportsProgress = false;
+            //_bw.DoWork +=
+            //    bw_DoWork;
         }
 
         [DllImport("winmm.dll", EntryPoint = "mciSendStringA", CharSet = CharSet.Ansi, SetLastError = true,
@@ -82,17 +82,17 @@ namespace MicAndNotes
         }
 
 
-        private void bw_DoWork(object sender, DoWorkEventArgs e)
-        {
-            //var worker = sender as BackgroundWorker;
-            var b = (ForUseByBackgroundWorker) e.Argument;
-            var play = new MediaPlayer();
+        //private void bw_DoWork(object sender, DoWorkEventArgs e)
+        //{
+        //    //var worker = sender as BackgroundWorker;
+        //    var b = (ForUseByBackgroundWorker) e.Argument;
+        //    var play = new MediaPlayer();
 
-            play.Open(new Uri(b.FilePath));
-            // play.Open(new Uri(@"C:\SAMProjects\NoteRecorder\MicAndNotes\MicAndNotes\bin\Release6f6e0b14-623b-4c87-9cfd-eb3cf49fbf0c.wav"));
-            play.Position = b.Span;
-            play.Play();
-        }
+        //    play.Open(new Uri(b.FilePath));
+        //    // play.Open(new Uri(@"C:\SAMProjects\NoteRecorder\MicAndNotes\MicAndNotes\bin\Release6f6e0b14-623b-4c87-9cfd-eb3cf49fbf0c.wav"));
+        //    play.Position = b.Span;
+        //    play.Play();
+        //}
 
         private void PlayBackButton_Click(object sender, RoutedEventArgs e)
         {
