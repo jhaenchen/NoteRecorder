@@ -7,7 +7,6 @@ using System.Runtime.InteropServices;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Threading;
 using System.Windows;
-using System.Windows.Forms;
 using System.Windows.Input;
 using System.Windows.Media;
 using KeyEventArgs = System.Windows.Input.KeyEventArgs;
@@ -19,25 +18,25 @@ namespace MicAndNotes
     /// <summary>
     ///     Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow
     {
-        private readonly MediaPlayer ClassPlayer = new MediaPlayer();
-        private readonly BackgroundWorker bw = new BackgroundWorker();
-        private readonly Stopwatch recordingTimer = new Stopwatch();
-        private string lastTextFilled = "";
-        private long recordingDuration;
-        private string savedRecordingAs;
-        private bool shouldContinue = true;
-        private string textBackup;
-        private List<TimeNote> timesForNote = new List<TimeNote>();
-        private bool wasLastKeyEnter;
+        private readonly MediaPlayer _classPlayer = new MediaPlayer();
+        private readonly BackgroundWorker _bw = new BackgroundWorker();
+        private readonly Stopwatch _recordingTimer = new Stopwatch();
+        private string _lastTextFilled = "";
+        private long _recordingDuration;
+        private string _savedRecordingAs;
+        private bool _shouldContinue = true;
+        private string _textBackup;
+        private List<TimeNote> _timesForNote = new List<TimeNote>();
+        private bool _wasLastKeyEnter;
 
         public MainWindow()
         {
             InitializeComponent();
-            bw.WorkerSupportsCancellation = false;
-            bw.WorkerReportsProgress = false;
-            bw.DoWork +=
+            _bw.WorkerSupportsCancellation = false;
+            _bw.WorkerReportsProgress = false;
+            _bw.DoWork +=
                 bw_DoWork;
         }
 
@@ -49,26 +48,26 @@ namespace MicAndNotes
 
         private void TextBox_KeyUp(object sender, KeyEventArgs e)
         {
-            if (e.Key == Key.Enter && wasLastKeyEnter)
+            if (e.Key == Key.Enter && _wasLastKeyEnter)
             {
                 string toStore = Textbox.Text;
-                if (lastTextFilled != "")
+                if (_lastTextFilled != "")
                 {
-                    toStore = Textbox.Text.Replace(lastTextFilled, String.Empty);
+                    toStore = Textbox.Text.Replace(_lastTextFilled, String.Empty);
                 }
-                lastTextFilled = Textbox.Text;
+                _lastTextFilled = Textbox.Text;
 
 
-                timesForNote.Add(new TimeNote(recordingTimer.Elapsed, toStore));
-                wasLastKeyEnter = false;
+                _timesForNote.Add(new TimeNote(_recordingTimer.Elapsed, toStore));
+                _wasLastKeyEnter = false;
             }
             else if (e.Key == Key.Enter)
             {
-                wasLastKeyEnter = true;
+                _wasLastKeyEnter = true;
             }
             else
             {
-                wasLastKeyEnter = false;
+                _wasLastKeyEnter = false;
             }
         }
 
@@ -78,61 +77,61 @@ namespace MicAndNotes
             Textbox.IsEnabled = true;
             RecordingIcon.Visibility = Visibility.Visible;
             mciSendString("open new Type waveaudio Alias recsound", "", 0, 0);
-            recordingTimer.Start();
+            _recordingTimer.Start();
             mciSendString("record recsound", "", 0, 0);
         }
 
 
         private void bw_DoWork(object sender, DoWorkEventArgs e)
         {
-            var worker = sender as BackgroundWorker;
-            var b = (forUseByBackgroundWorker) e.Argument;
+            //var worker = sender as BackgroundWorker;
+            var b = (ForUseByBackgroundWorker) e.Argument;
             var play = new MediaPlayer();
 
-            play.Open(new Uri(b.filePath));
+            play.Open(new Uri(b.FilePath));
             // play.Open(new Uri(@"C:\SAMProjects\NoteRecorder\MicAndNotes\MicAndNotes\bin\Release6f6e0b14-623b-4c87-9cfd-eb3cf49fbf0c.wav"));
-            play.Position = b.t;
+            play.Position = b.Span;
             play.Play();
         }
 
         private void PlayBackButton_Click(object sender, RoutedEventArgs e)
         {
-            string textArchive = textBackup;
+            string textArchive = _textBackup;
             var playbackStartPoint = new TimeSpan(0);
-            var forPlayback = new forUseByBackgroundWorker(playbackStartPoint, savedRecordingAs);
+            //var forPlayback = new ForUseByBackgroundWorker(playbackStartPoint, _savedRecordingAs);
 
 
-            ClassPlayer.Open(new Uri(savedRecordingAs));
+            _classPlayer.Open(new Uri(_savedRecordingAs));
             // play.Open(new Uri(@"C:\SAMProjects\NoteRecorder\MicAndNotes\MicAndNotes\bin\Release6f6e0b14-623b-4c87-9cfd-eb3cf49fbf0c.wav"));
-            ClassPlayer.Position = playbackStartPoint;
-            ClassPlayer.Play();
+            _classPlayer.Position = playbackStartPoint;
+            _classPlayer.Play();
 
             //var play = new MediaPlayer();
 
             //play.Open(new Uri(forPlayback.filePath));
-            //play.Position = forPlayback.t;
+            //play.Position = forPlayback.Span;
             //play.Play();
 
 
             //bw.RunWorkerAsync(forPlayback);
             ThreadPool.QueueUserWorkItem(o =>
             {
-                shouldContinue = true;
+                _shouldContinue = true;
                 int counter = 0;
                 var playBackStopwatch = new Stopwatch();
 
                 playBackStopwatch.Start();
 
-                while (shouldContinue)
+                while (_shouldContinue)
                 {
                     Dispatcher.BeginInvoke(new Action(() =>
                     {
                         try
                         {
-                            if (playBackStopwatch.Elapsed + playbackStartPoint < timesForNote[counter].occurance)
+                            if (playBackStopwatch.Elapsed + playbackStartPoint < _timesForNote[counter].Occurance)
                             {
-                                Textbox.Text = timesForNote[counter].note;
-                                theSlider.Value = timesForNote[counter].occurance.Ticks;
+                                Textbox.Text = _timesForNote[counter].Note;
+                                theSlider.Value = _timesForNote[counter].Occurance.Ticks;
                             }
                             else
                             {
@@ -141,7 +140,7 @@ namespace MicAndNotes
                         }
                         catch (Exception)
                         {
-                            shouldContinue = false;
+                            _shouldContinue = false;
                             Textbox.Text = textArchive;
                             Textbox.ScrollToEnd();
                             theSlider.Value = 0;
@@ -156,67 +155,60 @@ namespace MicAndNotes
         {
             RecordingIcon.Visibility = Visibility.Hidden;
             string savedFileName = Guid.NewGuid().ToString();
-            savedRecordingAs = Environment.CurrentDirectory + savedFileName + ".wav";
-            recordingTimer.Stop();
-            recordingDuration = recordingTimer.Elapsed.Ticks;
+            _savedRecordingAs = Environment.CurrentDirectory + savedFileName + ".wav";
+            _recordingTimer.Stop();
+            _recordingDuration = _recordingTimer.Elapsed.Ticks;
             mciSendString("save recsound " + Environment.CurrentDirectory + savedFileName + ".wav", "", 0, 0);
             mciSendString("close recsound ", "", 0, 0);
-            theSlider.Maximum = recordingDuration;
-            textBackup = Textbox.Text;
+            theSlider.Maximum = _recordingDuration;
+            _textBackup = Textbox.Text;
         }
 
 
         private void FromCursor_Click(object sender, RoutedEventArgs e)
         {
             var toStart = new TimeSpan();
-            int toPlayIndex = Textbox.CaretIndex;
-            int lineIndex = Textbox.GetLineIndexFromCharacterIndex(toPlayIndex);
-            String text = Textbox.GetLineText(lineIndex);
-            for (int i = 0; i < timesForNote.Count; i++)
+            var toPlayIndex = Textbox.CaretIndex;
+            var lineIndex = Textbox.GetLineIndexFromCharacterIndex(toPlayIndex);
+            var text = Textbox.GetLineText(lineIndex);
+            for (var i = 0; i < _timesForNote.Count; i++)
             {
-                if (timesForNote[i].note.Contains(text))
+                if (_timesForNote[i].Note.Contains(text))
                 {
-                    if (i > 0)
-                    {
-                        toStart = timesForNote[i - 1].occurance;
-                    }
-                    else
-                    {
-                        toStart = new TimeSpan(0);
-                    }
+                    toStart = i > 0 ? _timesForNote[i - 1].Occurance : new TimeSpan(0);
                 }
             }
 
 
-            string textArchive = textBackup;
+            var textArchive = _textBackup;
 
-            var forPlayback = new forUseByBackgroundWorker(toStart, savedRecordingAs);
+            //var forPlayback = new ForUseByBackgroundWorker(toStart, _savedRecordingAs);
 
-            ClassPlayer.Open(new Uri(savedRecordingAs));
+            _classPlayer.Open(new Uri(_savedRecordingAs));
             // play.Open(new Uri(@"C:\SAMProjects\NoteRecorder\MicAndNotes\MicAndNotes\bin\Release6f6e0b14-623b-4c87-9cfd-eb3cf49fbf0c.wav"));
-            ClassPlayer.Position = toStart;
-            ClassPlayer.Play();
+            _classPlayer.Position = toStart;
+            _classPlayer.Play();
 
 
             //bw.RunWorkerAsync(forPlayback);
             ThreadPool.QueueUserWorkItem(o =>
             {
-                shouldContinue = true;
+                _shouldContinue = true;
                 int counter = 0;
                 var playBackStopwatch = new Stopwatch();
 
                 playBackStopwatch.Start();
 
-                while (shouldContinue)
+                while (_shouldContinue)
                 {
                     Dispatcher.BeginInvoke(new Action(() =>
                     {
                         try
                         {
-                            if (playBackStopwatch.Elapsed + toStart < timesForNote[counter].occurance)
+                            if (playBackStopwatch.Elapsed + toStart < _timesForNote[counter].Occurance)
                             {
-                                Textbox.Text = timesForNote[counter].note;
-                                theSlider.Value = timesForNote[counter].occurance.Ticks;
+                                Textbox.Text = _timesForNote[counter].Note;
+                                theSlider.Value = _timesForNote[counter].Occurance.Ticks;
                             }
                             else
                             {
@@ -225,7 +217,7 @@ namespace MicAndNotes
                         }
                         catch (Exception)
                         {
-                            shouldContinue = false;
+                            _shouldContinue = false;
                             Textbox.Text = textArchive;
                             Textbox.ScrollToEnd();
                             theSlider.Value = 0;
@@ -240,84 +232,47 @@ namespace MicAndNotes
         private void theSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             var sliderValue = new TimeSpan((long) theSlider.Value);
-            for (int i = 0; i < timesForNote.Count - 1; i++)
+            for (int i = 0; i < _timesForNote.Count - 1; i++)
             {
-                int theFirst = timesForNote[i].occurance.CompareTo(sliderValue);
-                int theSecond = timesForNote[i + 1].occurance.CompareTo(sliderValue);
+                int theFirst = _timesForNote[i].Occurance.CompareTo(sliderValue);
+                int theSecond = _timesForNote[i + 1].Occurance.CompareTo(sliderValue);
                 if (theFirst == -1 && theSecond == 1)
                 {
-                    Textbox.Text = timesForNote[i + 1].note;
-                    currentlyViewedSection = i + 1;
+                    Textbox.Text = _timesForNote[i + 1].Note;
+                    _currentlyViewedSection = i + 1;
                     break;
                 }
 
-                if (i == 0 && timesForNote[i].occurance.CompareTo(sliderValue) == 1)
+                if (i == 0 && _timesForNote[i].Occurance.CompareTo(sliderValue) == 1)
                 {
-                    Textbox.Text = timesForNote[i].note;
-                    currentlyViewedSection = i;
+                    Textbox.Text = _timesForNote[i].Note;
+                    _currentlyViewedSection = i;
                     break;
                 }
-                Textbox.Text = timesForNote[i + 1].note;
-                currentlyViewedSection = i + 1;
+                Textbox.Text = _timesForNote[i + 1].Note;
+                _currentlyViewedSection = i + 1;
             }
         }
 
-        private int currentlyViewedSection = 0;
-        private void SaveButton_Click(object sender, RoutedEventArgs e)
-        {
-            var saveFileDialog1 = new SaveFileDialog();
-            saveFileDialog1.RestoreDirectory = true;
-
-            if (saveFileDialog1.ShowDialog() != true) return;
-            var toSave = new SaveObject(recordingDuration, timesForNote, textBackup,
-                saveFileDialog1.FileName + "\\recording.wav");
-            Directory.CreateDirectory(saveFileDialog1.FileName);
-            Stream stream = File.Open(saveFileDialog1.FileName + "\\data.nr", FileMode.Create);
-            var bFormatter = new BinaryFormatter();
-            bFormatter.Serialize(stream, toSave);
-            stream.Close();
-            File.Move(savedRecordingAs, saveFileDialog1.FileName + "\\recording.wav");
-            File.Delete(savedRecordingAs);
-        }
-
-        private void OpenFileButton_Click(object sender, RoutedEventArgs e)
-        {
-            var openFileDialog1 = new OpenFileDialog();
-            openFileDialog1.Filter = "Note Recorder Files|*.nr";
-            DialogResult result = openFileDialog1.ShowDialog();
-            if (result.ToString() == "OK") // Test result.
-            {
-                object objectToSerialize;
-                Stream stream = File.Open(openFileDialog1.FileName, FileMode.Open);
-                var bFormatter = new BinaryFormatter();
-                var recoveredState = (SaveObject) bFormatter.Deserialize(stream);
-                stream.Close();
-                timesForNote = recoveredState.sectionOccurances;
-                Textbox.Text = recoveredState.theNote;
-                textBackup = recoveredState.theNote;
-                recordingDuration = recoveredState.recordingDuration;
-                theSlider.Maximum = recordingDuration;
-                savedRecordingAs = recoveredState.recordingFilename;
-            }
-        }
+        private int _currentlyViewedSection;
 
         private void StopButton1_Click(object sender, RoutedEventArgs e)
         {
-            ClassPlayer.Stop();
-            shouldContinue = false;
+            _classPlayer.Stop();
+            _shouldContinue = false;
 
 
             //var play = new MediaPlayer();
 
             //play.Open(new Uri(forPlayback.filePath));
-            //play.Position = forPlayback.t;
+            //play.Position = forPlayback.Span;
             //play.Play();
 
 
             //bw.RunWorkerAsync(forPlayback);
             ThreadPool.QueueUserWorkItem(o =>
             {
-                bool tempBoolWhy = true;
+                var tempBoolWhy = true;
                 while (tempBoolWhy)
                 {
                     Dispatcher.BeginInvoke(new Action(() =>
@@ -326,14 +281,14 @@ namespace MicAndNotes
                         {
                             if (tempBoolWhy)
                             {
-                                Textbox.Text = textBackup;
+                                Textbox.Text = _textBackup;
                                 //theSlider.Value = 0;
                                 tempBoolWhy = false;
                             }
                         }
                         catch (Exception)
                         {
-                            shouldContinue = false;
+                            _shouldContinue = false;
 
                             Textbox.ScrollToEnd();
                             theSlider.Value = 0;
@@ -348,45 +303,42 @@ namespace MicAndNotes
         {
             Textbox.Text = "";
             Textbox.IsEnabled = true;
-            var openFileDialog1 = new OpenFileDialog();
-            openFileDialog1.Filter = "Note Recorder Files|*.nr";
-            DialogResult result = openFileDialog1.ShowDialog();
-            if (result.ToString() == "OK") // Test result.
+            var openFileDialog1 = new OpenFileDialog {Filter = @"Note Recorder Files|*.nr"};
+            var result = openFileDialog1.ShowDialog();
+            if (result == System.Windows.Forms.DialogResult.OK) // Test result.
             {
-                object objectToSerialize;
                 Stream stream = File.Open(openFileDialog1.FileName, FileMode.Open);
                 var bFormatter = new BinaryFormatter();
                 var recoveredState = (SaveObject) bFormatter.Deserialize(stream);
                 stream.Close();
-                timesForNote = recoveredState.sectionOccurances;
-                Textbox.Text = recoveredState.theNote;
-                textBackup = recoveredState.theNote;
-                recordingDuration = recoveredState.recordingDuration;
-                theSlider.Maximum = recordingDuration;
-                savedRecordingAs = recoveredState.recordingFilename;
+                _timesForNote = recoveredState.SectionOccurances;
+                Textbox.Text = recoveredState.TheNote;
+                _textBackup = recoveredState.TheNote;
+                _recordingDuration = recoveredState.RecordingDuration;
+                theSlider.Maximum = _recordingDuration;
+                _savedRecordingAs = recoveredState.RecordingFilename;
             }
         }
 
         private void ToolbarSave_Click(object sender, RoutedEventArgs e)
         {
-            var saveFileDialog1 = new SaveFileDialog();
-            saveFileDialog1.RestoreDirectory = true;
+            var saveFileDialog1 = new SaveFileDialog {RestoreDirectory = true};
 
             if (saveFileDialog1.ShowDialog() != true) return;
-            var toSave = new SaveObject(recordingDuration, timesForNote, textBackup,
+            var toSave = new SaveObject(_recordingDuration, _timesForNote, _textBackup,
                 saveFileDialog1.FileName + "\\recording.wav");
             Directory.CreateDirectory(saveFileDialog1.FileName);
             Stream stream = File.Open(saveFileDialog1.FileName + "\\data.nr", FileMode.Create);
             var bFormatter = new BinaryFormatter();
             bFormatter.Serialize(stream, toSave);
             stream.Close();
-            File.Move(savedRecordingAs, saveFileDialog1.FileName + "\\recording.wav");
-            File.Delete(savedRecordingAs);
+            File.Move(_savedRecordingAs, saveFileDialog1.FileName + "\\recording.wav");
+            File.Delete(_savedRecordingAs);
         }
 
         private void ToolbarClose_Click(object sender, RoutedEventArgs e)
         {
-            //Close();
+            Close();
         }
 
         private void ToolbarRecord_Click(object sender, RoutedEventArgs e)
@@ -395,7 +347,7 @@ namespace MicAndNotes
             Textbox.IsEnabled = true;
             RecordingIcon.Visibility = Visibility.Visible;
             mciSendString("open new Type waveaudio Alias recsound", "", 0, 0);
-            recordingTimer.Start();
+            _recordingTimer.Start();
             mciSendString("record recsound", "", 0, 0);
         }
 
@@ -403,69 +355,21 @@ namespace MicAndNotes
         {
             RecordingIcon.Visibility = Visibility.Hidden;
             string savedFileName = Guid.NewGuid().ToString();
-            savedRecordingAs = Environment.CurrentDirectory + savedFileName + ".wav";
-            recordingTimer.Stop();
-            recordingDuration = recordingTimer.Elapsed.Ticks;
+            _savedRecordingAs = Environment.CurrentDirectory + savedFileName + ".wav";
+            _recordingTimer.Stop();
+            _recordingDuration = _recordingTimer.Elapsed.Ticks;
             mciSendString("save recsound " + Environment.CurrentDirectory + savedFileName + ".wav", "", 0, 0);
             mciSendString("close recsound ", "", 0, 0);
-            theSlider.Maximum = recordingDuration;
-            textBackup = Textbox.Text;
+            theSlider.Maximum = _recordingDuration;
+            _textBackup = Textbox.Text;
         }
 
         private void UpdateSectionButton_Click(object sender, RoutedEventArgs e)
         {
             string currentSectionText = Textbox.Text;
-            textBackup = textBackup.Replace(timesForNote[currentlyViewedSection].note, currentSectionText);
-            timesForNote[currentlyViewedSection].note = currentSectionText;
+            _textBackup = _textBackup.Replace(_timesForNote[_currentlyViewedSection].Note, currentSectionText);
+            _timesForNote[_currentlyViewedSection].Note = currentSectionText;
             
-        }
-
-        [Serializable]
-        private class SaveObject
-        {
-            public readonly long recordingDuration;
-            public readonly string recordingFilename;
-            public readonly List<TimeNote> sectionOccurances;
-            public readonly string theNote;
-
-
-            public SaveObject(long r, List<TimeNote> l, string s, string recordingname)
-            {
-                recordingDuration = r;
-                sectionOccurances = l;
-                theNote = s;
-                recordingFilename = recordingname;
-            }
-        }
-
-        [Serializable]
-        private class TimeNote
-        {
-            public string note;
-            public TimeSpan occurance;
-
-            public TimeNote(TimeSpan o, string n)
-            {
-                occurance = o;
-                note = n;
-            }
-
-            public string serialize()
-            {
-                return occurance + "," + note + ",";
-            }
-        }
-
-        private class forUseByBackgroundWorker
-        {
-            public readonly string filePath;
-            public readonly TimeSpan t;
-
-            public forUseByBackgroundWorker(TimeSpan ts, string path)
-            {
-                t = ts;
-                filePath = path;
-            }
         }
     }
 }

@@ -14,10 +14,10 @@ AcceptsReturn="True" KeyUp="TextBox_KeyUp" IsEnabled="False" Text="Hit Record fi
         <Image x:Name="RecordingIcon" HorizontalAlignment="Left" Height="32" Margin="21,508,0,0" VerticalAlignment="Top" Width="44" Source="Images/recording.png" Visibility="Hidden"/>
         <Button x:Name="StopButton1" Content="Stop" HorizontalAlignment="Left" Margin="728,555,0,0" VerticalAlignment="Top" Width="75" Click="StopButton1_Click"/>
         <Menu HorizontalAlignment="Left" Height="30" VerticalAlignment="Top" Width="1047">
-            <MenuItem x:Name="ToolbarClose" Header="_File" Click="ToolbarClose_Click">
+            <MenuItem x:Name="ToolbarFile" Header="_File">
                 <MenuItem x:Name="ToolbarOpen" Header="_Open" Click="ToolbarOpen_Click"/>
                 <MenuItem x:Name="ToolbarSave" Header="_Save" Click="ToolbarSave_Click"/>
-                <MenuItem Header="_Close"/>
+                <MenuItem x:Name="ToolbarClose" Header="_Close" Click="ToolbarClose_Click"/>
             </MenuItem>
             <MenuItem Header="_Recording">
                 <MenuItem x:Name="ToolbarRecord" Header="Start Recording" Click="ToolbarRecord_Click" />
