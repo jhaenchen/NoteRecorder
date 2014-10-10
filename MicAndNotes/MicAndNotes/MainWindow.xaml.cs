@@ -406,9 +406,16 @@ namespace MicAndNotes
         private void UpdateSectionButton_Click(object sender, RoutedEventArgs e)
         {
             string currentSectionText = Textbox.Text;
-            _textBackup = _textBackup.Replace(_timesForNote[_currentlyViewedSection].Note, currentSectionText);
-            _timesForNote[_currentlyViewedSection].Note = currentSectionText;
-            
+           
+            _timesForNote[_currentlyViewedSection].Note = currentSectionText+"\n";
+            string newBackup = "";
+            for (int i = 0; i < _timesForNote.Count; i++)
+            {
+                newBackup += _timesForNote[i].Note;
+                
+            }
+            _textBackup = newBackup;
+
         }
 
         private void ToolbarSaveAs_Click(object sender, RoutedEventArgs e)
