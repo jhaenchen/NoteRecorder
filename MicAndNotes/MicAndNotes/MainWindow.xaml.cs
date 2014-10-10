@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
+using System.IO.Compression;
 using System.Runtime.InteropServices;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Threading;
@@ -30,6 +31,7 @@ namespace MicAndNotes
         private string _textBackup;
         private List<TimeNote> _timesForNote = new List<TimeNote>();
         private bool _wasLastKeyEnter;
+        private SaveObject currentSave = null;
 
         public MainWindow()
         {
@@ -307,38 +309,43 @@ namespace MicAndNotes
             var result = openFileDialog1.ShowDialog();
             if (result == System.Windows.Forms.DialogResult.OK) // Test result.
             {
-                Stream stream = File.Open(openFileDialog1.FileName, FileMode.Open);
+                var zip = ZipFile.OpenRead(openFileDialog1.FileName);
+                try
+                {
+                    Directory.Delete("CurrentWorkingDirectory", true);
+                }
+                catch (System.IO.DirectoryNotFoundException)
+                {
+                }
+
+                zip.ExtractToDirectory("CurrentWorkingDirectory");
+                Stream stream = File.Open("CurrentWorkingDirectory" + "\\data.nr", FileMode.Open);
                 var bFormatter = new BinaryFormatter();
                 var recoveredState = (SaveObject) bFormatter.Deserialize(stream);
+                currentSave = recoveredState;
                 stream.Close();
                 _timesForNote = recoveredState.SectionOccurances;
                 Textbox.Text = recoveredState.TheNote;
                 _textBackup = recoveredState.TheNote;
                 _recordingDuration = recoveredState.RecordingDuration;
                 theSlider.Maximum = _recordingDuration;
-                _savedRecordingAs = recoveredState.RecordingFilename;
+                _savedRecordingAs = Directory.GetCurrentDirectory()+ "\\CurrentWorkingDirectory" + "\\recording.wav";
             }
         }
 
         private void ToolbarSave_Click(object sender, RoutedEventArgs e)
         {
-            var saveFileDialog1 = new SaveFileDialog {RestoreDirectory = true};
-
-            if (saveFileDialog1.ShowDialog() != true) return;
-            var toSave = new SaveObject(_recordingDuration, _timesForNote, _textBackup,
-                saveFileDialog1.FileName + "\\recording.wav");
-            Directory.CreateDirectory(saveFileDialog1.FileName);
-            Stream stream = File.Open(saveFileDialog1.FileName + "\\data.nr", FileMode.Create);
-            var bFormatter = new BinaryFormatter();
-            bFormatter.Serialize(stream, toSave);
-            stream.Close();
-            File.Move(_savedRecordingAs, saveFileDialog1.FileName + "\\recording.wav");
-            File.Delete(_savedRecordingAs);
+            if(currentSave != null)
+            {
+                
+            }
+            
         }
 
         private void ToolbarClose_Click(object sender, RoutedEventArgs e)
         {
             Close();
+            
         }
 
         private void ToolbarRecord_Click(object sender, RoutedEventArgs e)
@@ -370,6 +377,27 @@ namespace MicAndNotes
             _textBackup = _textBackup.Replace(_timesForNote[_currentlyViewedSection].Note, currentSectionText);
             _timesForNote[_currentlyViewedSection].Note = currentSectionText;
             
+        }
+
+        private void ToolbarSaveAs_Click(object sender, RoutedEventArgs e)
+        {
+            var saveFileDialog1 = new SaveFileDialog { RestoreDirectory = true };
+
+            if (saveFileDialog1.ShowDialog() != true) return;
+            var toSave = new SaveObject(_recordingDuration, _timesForNote, _textBackup,
+                saveFileDialog1.FileName + "\\recording.wav");
+            Directory.CreateDirectory(saveFileDialog1.FileName);
+            Stream stream = File.Open(saveFileDialog1.FileName + "\\data.nr", FileMode.Create);
+            var bFormatter = new BinaryFormatter();
+            bFormatter.Serialize(stream, toSave);
+            stream.Close();
+            File.Move(_savedRecordingAs, saveFileDialog1.FileName + "\\recording.wav");
+            File.Delete(_savedRecordingAs);
+            var zipFileName = Guid.NewGuid();
+            ZipFile.CreateFromDirectory(saveFileDialog1.FileName,zipFileName.ToString());
+            Directory.Delete(saveFileDialog1.FileName,true);
+            File.Move(zipFileName.ToString(), saveFileDialog1.FileName+".nr");
+
         }
     }
 }

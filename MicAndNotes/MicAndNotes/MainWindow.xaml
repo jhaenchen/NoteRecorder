@@ -17,6 +17,7 @@ AcceptsReturn="True" KeyUp="TextBox_KeyUp" IsEnabled="False" Text="Hit Record fi
             <MenuItem x:Name="ToolbarFile" Header="_File">
                 <MenuItem x:Name="ToolbarOpen" Header="_Open" Click="ToolbarOpen_Click"/>
                 <MenuItem x:Name="ToolbarSave" Header="_Save" Click="ToolbarSave_Click"/>
+                <MenuItem x:Name="ToolbarSaveAs"  Header="_Save As" Click="ToolbarSaveAs_Click" />
                 <MenuItem x:Name="ToolbarClose" Header="_Close" Click="ToolbarClose_Click"/>
             </MenuItem>
             <MenuItem Header="_Recording">
