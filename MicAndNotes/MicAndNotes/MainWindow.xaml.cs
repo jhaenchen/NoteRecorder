@@ -4,14 +4,15 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Threading;
 using System.Windows;
+using System.Windows.Forms;
 using System.Windows.Input;
 using System.Windows.Media;
 using KeyEventArgs = System.Windows.Input.KeyEventArgs;
-using OpenFileDialog = System.Windows.Forms.OpenFileDialog;
 using SaveFileDialog = Microsoft.Win32.SaveFileDialog;
 
 namespace MicAndNotes
@@ -21,9 +22,10 @@ namespace MicAndNotes
     /// </summary>
     public partial class MainWindow
     {
-        private readonly MediaPlayer _classPlayer = new MediaPlayer();
         private readonly BackgroundWorker _bw = new BackgroundWorker();
+        private readonly MediaPlayer _classPlayer = new MediaPlayer();
         private readonly Stopwatch _recordingTimer = new Stopwatch();
+        private int _currentlyViewedSection;
         private string _lastTextFilled = "";
         private long _recordingDuration;
         private string _savedRecordingAs;
@@ -31,8 +33,8 @@ namespace MicAndNotes
         private string _textBackup;
         private List<TimeNote> _timesForNote = new List<TimeNote>();
         private bool _wasLastKeyEnter;
-        private SaveObject currentSave = null;
-        private string currentOpenNoteLocation = null;
+        private string _currentOpenNoteLocation;
+        private SaveObject _currentSave;
 
         public MainWindow()
         {
@@ -171,10 +173,10 @@ namespace MicAndNotes
         private void FromCursor_Click(object sender, RoutedEventArgs e)
         {
             var toStart = new TimeSpan();
-            var toPlayIndex = Textbox.CaretIndex;
-            var lineIndex = Textbox.GetLineIndexFromCharacterIndex(toPlayIndex);
-            var text = Textbox.GetLineText(lineIndex);
-            for (var i = 0; i < _timesForNote.Count; i++)
+            int toPlayIndex = Textbox.CaretIndex;
+            int lineIndex = Textbox.GetLineIndexFromCharacterIndex(toPlayIndex);
+            string text = Textbox.GetLineText(lineIndex);
+            for (int i = 0; i < _timesForNote.Count; i++)
             {
                 if (_timesForNote[i].Note.Contains(text))
                 {
@@ -183,7 +185,7 @@ namespace MicAndNotes
             }
 
 
-            var textArchive = _textBackup;
+            string textArchive = _textBackup;
 
             //var forPlayback = new ForUseByBackgroundWorker(toStart, _savedRecordingAs);
 
@@ -234,6 +236,14 @@ namespace MicAndNotes
 
         private void theSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
+            if (_timesForNote[_currentlyViewedSection].Note != Textbox.Text && Textbox.Text != _textBackup)
+            {
+                _timesForNote[_currentlyViewedSection].Note = Textbox.Text + "\n";
+
+
+                string newBackup = _timesForNote.Aggregate("", (current, t) => current + t.Note);
+                _textBackup = newBackup;
+            }
             var sliderValue = new TimeSpan((long) theSlider.Value);
             for (int i = 0; i < _timesForNote.Count - 1; i++)
             {
@@ -257,8 +267,6 @@ namespace MicAndNotes
             }
         }
 
-        private int _currentlyViewedSection;
-
         private void StopButton1_Click(object sender, RoutedEventArgs e)
         {
             _classPlayer.Stop();
@@ -275,7 +283,7 @@ namespace MicAndNotes
             //bw.RunWorkerAsync(forPlayback);
             ThreadPool.QueueUserWorkItem(o =>
             {
-                var tempBoolWhy = true;
+                bool tempBoolWhy = true;
                 while (tempBoolWhy)
                 {
                     Dispatcher.BeginInvoke(new Action(() =>
@@ -307,15 +315,15 @@ namespace MicAndNotes
             Textbox.Text = "";
             Textbox.IsEnabled = true;
             var openFileDialog1 = new OpenFileDialog {Filter = @"Note Recorder Files|*.nr"};
-            var result = openFileDialog1.ShowDialog();
+            DialogResult result = openFileDialog1.ShowDialog();
             if (result == System.Windows.Forms.DialogResult.OK) // Test result.
             {
-                var zip = ZipFile.OpenRead(openFileDialog1.FileName);
+                ZipArchive zip = ZipFile.OpenRead(openFileDialog1.FileName);
                 try
                 {
                     Directory.Delete("CurrentWorkingDirectory", true);
                 }
-                catch (System.IO.DirectoryNotFoundException)
+                catch (DirectoryNotFoundException)
                 {
                 }
 
@@ -323,26 +331,26 @@ namespace MicAndNotes
                 Stream stream = File.Open("CurrentWorkingDirectory" + "\\data.nr", FileMode.Open);
                 var bFormatter = new BinaryFormatter();
                 var recoveredState = (SaveObject) bFormatter.Deserialize(stream);
-                currentSave = recoveredState;
+                _currentSave = recoveredState;
                 stream.Close();
                 _timesForNote = recoveredState.SectionOccurances;
                 Textbox.Text = recoveredState.TheNote;
                 _textBackup = recoveredState.TheNote;
                 _recordingDuration = recoveredState.RecordingDuration;
                 theSlider.Maximum = _recordingDuration;
-                _savedRecordingAs = Directory.GetCurrentDirectory()+ "\\CurrentWorkingDirectory" + "\\recording.wav";
-                currentSave = new SaveObject(_recordingDuration,_timesForNote,recoveredState.TheNote,_savedRecordingAs);
-                currentOpenNoteLocation = openFileDialog1.FileName;
+                _savedRecordingAs = Directory.GetCurrentDirectory() + "\\CurrentWorkingDirectory" + "\\recording.wav";
+                _currentSave = new SaveObject(_recordingDuration, _timesForNote, recoveredState.TheNote,
+                    _savedRecordingAs);
+                _currentOpenNoteLocation = openFileDialog1.FileName;
             }
         }
 
         private void ToolbarSave_Click(object sender, RoutedEventArgs e)
         {
-            if (currentSave != null)
+            if (_currentSave != null)
             {
-                
                 var toSave = new SaveObject(_recordingDuration, _timesForNote, _textBackup,
-                    currentSave.RecordingFilename);
+                    _currentSave.RecordingFilename);
                 try
                 {
                     Directory.Delete("justASecond", true);
@@ -350,11 +358,11 @@ namespace MicAndNotes
                 catch (DirectoryNotFoundException)
                 {
                 }
-                ZipFile.ExtractToDirectory(currentOpenNoteLocation, "justASecond");
-                DirectoryInfo t = new DirectoryInfo("justASecond");
-                File.Delete(t.FullName+"\\data.nr");
-                File.Delete(currentOpenNoteLocation);
-                
+                ZipFile.ExtractToDirectory(_currentOpenNoteLocation, "justASecond");
+                var t = new DirectoryInfo("justASecond");
+                File.Delete(t.FullName + "\\data.nr");
+                File.Delete(_currentOpenNoteLocation);
+
                 Stream stream = File.Open(t + "\\data.nr", FileMode.Create);
                 var bFormatter = new BinaryFormatter();
                 bFormatter.Serialize(stream, toSave);
@@ -362,22 +370,20 @@ namespace MicAndNotes
                 //File.Copy(_savedRecordingAs, t + "\\recording.wav");
                 //File.Move(_savedRecordingAs, t + "\\recording.wav");
                 File.Delete(_savedRecordingAs);
-                var zipFileName = Guid.NewGuid();
+                Guid zipFileName = Guid.NewGuid();
                 ZipFile.CreateFromDirectory(t.FullName, zipFileName.ToString());
                 //Directory.Delete(t.FullName, true);
-                File.Move(zipFileName.ToString(), currentOpenNoteLocation);
+                File.Move(zipFileName.ToString(), _currentOpenNoteLocation);
             }
             else
             {
                 ToolbarSaveAs_Click(sender, e);
             }
-
         }
 
         private void ToolbarClose_Click(object sender, RoutedEventArgs e)
         {
             Close();
-            
         }
 
         private void ToolbarRecord_Click(object sender, RoutedEventArgs e)
@@ -403,24 +409,9 @@ namespace MicAndNotes
             _textBackup = Textbox.Text;
         }
 
-        private void UpdateSectionButton_Click(object sender, RoutedEventArgs e)
-        {
-            string currentSectionText = Textbox.Text;
-           
-            _timesForNote[_currentlyViewedSection].Note = currentSectionText+"\n";
-            string newBackup = "";
-            for (int i = 0; i < _timesForNote.Count; i++)
-            {
-                newBackup += _timesForNote[i].Note;
-                
-            }
-            _textBackup = newBackup;
-
-        }
-
         private void ToolbarSaveAs_Click(object sender, RoutedEventArgs e)
         {
-            var saveFileDialog1 = new SaveFileDialog { RestoreDirectory = true };
+            var saveFileDialog1 = new SaveFileDialog {RestoreDirectory = true};
 
             if (saveFileDialog1.ShowDialog() != true) return;
             var toSave = new SaveObject(_recordingDuration, _timesForNote, _textBackup,
@@ -432,11 +423,10 @@ namespace MicAndNotes
             stream.Close();
             File.Move(_savedRecordingAs, saveFileDialog1.FileName + "\\recording.wav");
             File.Delete(_savedRecordingAs);
-            var zipFileName = Guid.NewGuid();
-            ZipFile.CreateFromDirectory(saveFileDialog1.FileName,zipFileName.ToString());
-            Directory.Delete(saveFileDialog1.FileName,true);
-            File.Move(zipFileName.ToString(), saveFileDialog1.FileName+".nr");
-
+            Guid zipFileName = Guid.NewGuid();
+            ZipFile.CreateFromDirectory(saveFileDialog1.FileName, zipFileName.ToString());
+            Directory.Delete(saveFileDialog1.FileName, true);
+            File.Move(zipFileName.ToString(), saveFileDialog1.FileName + ".nr");
         }
     }
 }
