@@ -8,7 +8,7 @@ VerticalScrollBarVisibility="Visible"
 AcceptsReturn="True" KeyUp="TextBox_KeyUp" IsEnabled="False" Text="Hit Record first."/>
         <Button x:Name="RecordButton" Content="Record" HorizontalAlignment="Left" Margin="290,555,0,0" VerticalAlignment="Top" Width="75" Click="RecordButton_Click"/>
         <Button x:Name="PlayBackButton" Content="Playback" HorizontalAlignment="Left" Margin="536,555,0,0" VerticalAlignment="Top" Width="75" Click="PlayBackButton_Click"/>
-        <Button x:Name="StopButton" Content="Stop Recording" HorizontalAlignment="Left" Margin="370,555,0,0" VerticalAlignment="Top" Width="111" Click="StopButton_Click"/>
+        <Button x:Name="StopRecordingButton" Content="Stop Recording" HorizontalAlignment="Left" Margin="370,555,0,0" VerticalAlignment="Top" Width="111" Click="StopRecordingButton_Click"/>
         <Button x:Name="FromCursor" Content="From Cursor" HorizontalAlignment="Left" Margin="616,555,0,0" VerticalAlignment="Top" Width="107" Click="FromCursor_Click"/>
         <Slider x:Name="theSlider" HorizontalAlignment="Left" Margin="346,508,0,0" VerticalAlignment="Top" Height="42" Width="417" ValueChanged="theSlider_ValueChanged"/>
         <Image x:Name="RecordingIcon" HorizontalAlignment="Left" Height="32" Margin="21,508,0,0" VerticalAlignment="Top" Width="44" Source="Images/recording.png" Visibility="Hidden"/>
@@ -25,7 +25,7 @@ AcceptsReturn="True" KeyUp="TextBox_KeyUp" IsEnabled="False" Text="Hit Record fi
                 <MenuItem x:Name="ToolbarStopRecording"  Header="Stop Recording" Click="ToolbarStopRecording_Click"  />
             </MenuItem>
         </Menu>
-        <Button x:Name="UpdateSectionButton" Content="Update Section" HorizontalAlignment="Left" Margin="872,555,0,0" VerticalAlignment="Top" Width="116" Click="UpdateSectionButton_Click"/>
+        
 
     </Grid>
 </Window>

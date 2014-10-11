@@ -131,12 +131,15 @@ namespace MicAndNotes
                 {
                     Dispatcher.BeginInvoke(new Action(() =>
                     {
+                        theSlider.Value = playBackStopwatch.ElapsedTicks;
                         try
                         {
                             if (playBackStopwatch.Elapsed + playbackStartPoint < _timesForNote[counter].Occurance)
                             {
                                 Textbox.Text = _timesForNote[counter].Note;
+                                _currentlyViewedSection = counter;
                                 theSlider.Value = _timesForNote[counter].Occurance.Ticks;
+
                             }
                             else
                             {
@@ -146,9 +149,10 @@ namespace MicAndNotes
                         catch (Exception)
                         {
                             _shouldContinue = false;
-                            Textbox.Text = textArchive;
-                            Textbox.ScrollToEnd();
-                            theSlider.Value = 0;
+                            //Textbox.Text = textArchive;
+                            //Textbox.ScrollToEnd();
+                            //theSlider.Value = 0;
+                            //_currentlyViewedSection = -1;
                         }
                     }));
                     Thread.Sleep(1);
@@ -156,19 +160,7 @@ namespace MicAndNotes
             });
         }
 
-        private void StopButton_Click(object sender, RoutedEventArgs e)
-        {
-            RecordingIcon.Visibility = Visibility.Hidden;
-            string savedFileName = Guid.NewGuid().ToString();
-            _savedRecordingAs = Environment.CurrentDirectory + savedFileName + ".wav";
-            _recordingTimer.Stop();
-            _recordingDuration = _recordingTimer.Elapsed.Ticks;
-            mciSendString("save recsound " + Environment.CurrentDirectory + savedFileName + ".wav", "", 0, 0);
-            mciSendString("close recsound ", "", 0, 0);
-            theSlider.Maximum = _recordingDuration;
-            _textBackup = Textbox.Text;
-        }
-
+        
 
         private void FromCursor_Click(object sender, RoutedEventArgs e)
         {
@@ -208,12 +200,14 @@ namespace MicAndNotes
                 {
                     Dispatcher.BeginInvoke(new Action(() =>
                     {
+                        theSlider.Value = playBackStopwatch.ElapsedTicks;
                         try
                         {
                             if (playBackStopwatch.Elapsed + toStart < _timesForNote[counter].Occurance)
                             {
                                 Textbox.Text = _timesForNote[counter].Note;
-                                theSlider.Value = _timesForNote[counter].Occurance.Ticks;
+                                //theSlider.Value = _timesForNote[counter].Occurance.Ticks;
+                                _currentlyViewedSection = counter;
                             }
                             else
                             {
@@ -226,6 +220,7 @@ namespace MicAndNotes
                             Textbox.Text = textArchive;
                             Textbox.ScrollToEnd();
                             theSlider.Value = 0;
+                            _currentlyViewedSection = -1;
                         }
                     }));
                     Thread.Sleep(1);
@@ -236,14 +231,18 @@ namespace MicAndNotes
 
         private void theSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            if (_timesForNote[_currentlyViewedSection].Note != Textbox.Text && Textbox.Text != _textBackup)
+            if (Textbox.Text != _textBackup && _currentlyViewedSection != -1)
             {
-                _timesForNote[_currentlyViewedSection].Note = Textbox.Text + "\n";
+                if (_timesForNote[_currentlyViewedSection].Note != Textbox.Text)
+                {
+                    _timesForNote[_currentlyViewedSection].Note = Textbox.Text + "\n";
 
 
-                string newBackup = _timesForNote.Aggregate("", (current, t) => current + t.Note);
-                _textBackup = newBackup;
+                    string newBackup = _timesForNote.Aggregate("", (current, t) => current + t.Note);
+                    _textBackup = newBackup;
+                }
             }
+            
             var sliderValue = new TimeSpan((long) theSlider.Value);
             for (int i = 0; i < _timesForNote.Count - 1; i++)
             {
@@ -265,6 +264,7 @@ namespace MicAndNotes
                 Textbox.Text = _timesForNote[i + 1].Note;
                 _currentlyViewedSection = i + 1;
             }
+           
         }
 
         private void StopButton1_Click(object sender, RoutedEventArgs e)
@@ -427,6 +427,19 @@ namespace MicAndNotes
             ZipFile.CreateFromDirectory(saveFileDialog1.FileName, zipFileName.ToString());
             Directory.Delete(saveFileDialog1.FileName, true);
             File.Move(zipFileName.ToString(), saveFileDialog1.FileName + ".nr");
+        }
+
+        private void StopRecordingButton_Click(object sender, RoutedEventArgs e)
+        {
+            RecordingIcon.Visibility = Visibility.Hidden;
+            string savedFileName = Guid.NewGuid().ToString();
+            _savedRecordingAs = Environment.CurrentDirectory + savedFileName + ".wav";
+            _recordingTimer.Stop();
+            _recordingDuration = _recordingTimer.Elapsed.Ticks;
+            mciSendString("save recsound " + Environment.CurrentDirectory + savedFileName + ".wav", "", 0, 0);
+            mciSendString("close recsound ", "", 0, 0);
+            theSlider.Maximum = _timesForNote.Last().Occurance.Ticks;
+            _textBackup = Textbox.Text;
         }
     }
 }
