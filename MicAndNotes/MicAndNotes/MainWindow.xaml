@@ -1,17 +1,31 @@
 ﻿<Window x:Class="MicAndNotes.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="MainWindow" Height="578.657" Width="919.03">
-    <Grid>
-        <TextBox x:Name="Textbox" HorizontalAlignment="Left" Height="441" Margin="28,30,0,0" VerticalAlignment="Top" Width="860" TextWrapping="Wrap"
+        Title="RNote" Height="629.057" Width="1047.43">
+    <Grid Background="#FF5F5151" Margin="0,0,-6.2,-3">
+        <TextBox x:Name="Textbox" HorizontalAlignment="Left" Height="441" Margin="15,45,0,0" VerticalAlignment="Top" Width="1003" TextWrapping="Wrap"
 VerticalScrollBarVisibility="Visible"
-AcceptsReturn="True" KeyUp="TextBox_KeyUp"/>
-        <Button x:Name="RecordButton" Content="Record" HorizontalAlignment="Left" Margin="21,477,0,0" VerticalAlignment="Top" Width="75" Click="RecordButton_Click"/>
-        <Button x:Name="PlayBackButton" Content="Playback" HorizontalAlignment="Left" Margin="267,476,0,0" VerticalAlignment="Top" Width="75" Click="PlayBackButton_Click"/>
-        <Button x:Name="StopButton" Content="Stop Recording" HorizontalAlignment="Left" Margin="114,476,0,0" VerticalAlignment="Top" Width="111" Click="StopButton_Click"/>
-        <Button x:Name="FromCursor" Content="From Cursor" HorizontalAlignment="Left" Margin="347,477,0,0" VerticalAlignment="Top" Width="107" Click="FromCursor_Click"/>
-        <Slider x:Name="theSlider" HorizontalAlignment="Left" Margin="225,508,0,-0.4" VerticalAlignment="Top" Height="42" Width="417" ValueChanged="theSlider_ValueChanged"/>
-        <Button x:Name="SaveButton" Content="Save Note" HorizontalAlignment="Left" Margin="615,477,0,0" VerticalAlignment="Top" Width="75" Click="SaveButton_Click"/>
-        <Button x:Name="OpenFileButton" Content="Open" HorizontalAlignment="Left" Margin="737,477,0,0" VerticalAlignment="Top" Width="75" Click="OpenFileButton_Click"/>
+AcceptsReturn="True" KeyUp="TextBox_KeyUp" IsEnabled="False" Text="Hit Record first."/>
+        <Button x:Name="RecordButton" Content="Record" HorizontalAlignment="Left" Margin="290,555,0,0" VerticalAlignment="Top" Width="75" Click="RecordButton_Click"/>
+        <Button x:Name="PlayBackButton" Content="Playback" HorizontalAlignment="Left" Margin="536,555,0,0" VerticalAlignment="Top" Width="75" Click="PlayBackButton_Click"/>
+        <Button x:Name="StopRecordingButton" Content="Stop Recording" HorizontalAlignment="Left" Margin="370,555,0,0" VerticalAlignment="Top" Width="111" Click="StopRecordingButton_Click"/>
+        <Button x:Name="FromCursor" Content="From Cursor" HorizontalAlignment="Left" Margin="616,555,0,0" VerticalAlignment="Top" Width="107" Click="FromCursor_Click"/>
+        <Slider x:Name="theSlider" HorizontalAlignment="Left" Margin="346,508,0,0" VerticalAlignment="Top" Height="42" Width="417" ValueChanged="theSlider_ValueChanged"/>
+        <Image x:Name="RecordingIcon" HorizontalAlignment="Left" Height="32" Margin="21,508,0,0" VerticalAlignment="Top" Width="44" Source="Images/recording.png" Visibility="Hidden"/>
+        <Button x:Name="StopButton1" Content="Stop" HorizontalAlignment="Left" Margin="728,555,0,0" VerticalAlignment="Top" Width="75" Click="StopButton1_Click"/>
+        <Menu HorizontalAlignment="Left" Height="30" VerticalAlignment="Top" Width="1047">
+            <MenuItem x:Name="ToolbarFile" Header="_File">
+                <MenuItem x:Name="ToolbarOpen" Header="_Open" Click="ToolbarOpen_Click"/>
+                <MenuItem x:Name="ToolbarSave" Header="_Save" Click="ToolbarSave_Click"/>
+                <MenuItem x:Name="ToolbarSaveAs"  Header="_Save As" Click="ToolbarSaveAs_Click" />
+                <MenuItem x:Name="ToolbarClose" Header="_Close" Click="ToolbarClose_Click"/>
+            </MenuItem>
+            <MenuItem Header="_Recording">
+                <MenuItem x:Name="ToolbarRecord" Header="Start Recording" Click="ToolbarRecord_Click" />
+                <MenuItem x:Name="ToolbarStopRecording"  Header="Stop Recording" Click="ToolbarStopRecording_Click"  />
+            </MenuItem>
+        </Menu>
+        
+
     </Grid>
 </Window>
