@@ -261,45 +261,48 @@ namespace MicAndNotes
 
         private void StopButton1_Click(object sender, RoutedEventArgs e)
         {
+            Textbox.Text = _textBackup;
+            theSlider.Value = 0;
+
             _classPlayer.Stop();
             _shouldContinue = false;
 
 
-            //var play = new MediaPlayer();
+            ////var play = new MediaPlayer();
 
-            //play.Open(new Uri(forPlayback.filePath));
-            //play.Position = forPlayback.Span;
-            //play.Play();
+            ////play.Open(new Uri(forPlayback.filePath));
+            ////play.Position = forPlayback.Span;
+            ////play.Play();
 
 
-            //bw.RunWorkerAsync(forPlayback);
-            ThreadPool.QueueUserWorkItem(o =>
-            {
-                bool tempBoolWhy = true;
-                while (tempBoolWhy)
-                {
-                    Dispatcher.BeginInvoke(new Action(() =>
-                    {
-                        try
-                        {
-                            if (tempBoolWhy)
-                            {
-                                Textbox.Text = _textBackup;
-                                //theSlider.Value = 0;
-                                tempBoolWhy = false;
-                            }
-                        }
-                        catch (Exception)
-                        {
-                            _shouldContinue = false;
+            ////bw.RunWorkerAsync(forPlayback);
+            //ThreadPool.QueueUserWorkItem(o =>
+            //{
+            //    bool tempBoolWhy = true;
+            //    while (tempBoolWhy)
+            //    {
+            //        Dispatcher.BeginInvoke(new Action(() =>
+            //        {
+            //            try
+            //            {
+            //                if (tempBoolWhy)
+            //                {
+            //                    Textbox.Text = _textBackup;
+            //                    //theSlider.Value = 0;
+            //                    tempBoolWhy = false;
+            //                }
+            //            }
+            //            catch (Exception)
+            //            {
+            //                _shouldContinue = false;
 
-                            Textbox.ScrollToEnd();
-                            theSlider.Value = 0;
-                        }
-                    }));
-                    Thread.Sleep(1);
-                }
-            });
+            //                Textbox.ScrollToEnd();
+            //                theSlider.Value = 0;
+            //            }
+            //        }));
+            //        Thread.Sleep(1);
+            //    }
+            //});
         }
 
         private void ToolbarOpen_Click(object sender, RoutedEventArgs e)
