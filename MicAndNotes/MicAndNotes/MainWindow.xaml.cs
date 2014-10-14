@@ -231,39 +231,39 @@ namespace MicAndNotes
 
         private void theSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            if (Textbox.Text != _textBackup && _currentlyViewedSection != -1)
-            {
-                if (_timesForNote[_currentlyViewedSection].Note != Textbox.Text)
-                {
-                    _timesForNote[_currentlyViewedSection].Note = Textbox.Text + "\n";
+            //if (Textbox.Text != _textBackup && _currentlyViewedSection != -1)
+            //{
+            //    if (_timesForNote[_currentlyViewedSection].Note != Textbox.Text)
+            //    {
+            //        _timesForNote[_currentlyViewedSection].Note = Textbox.Text + "\n";
 
 
-                    string newBackup = _timesForNote.Aggregate("", (current, t) => current + t.Note);
-                    _textBackup = newBackup;
-                }
-            }
+            //        string newBackup = _timesForNote.Aggregate("", (current, t) => current + t.Note);
+            //        _textBackup = newBackup;
+            //    }
+            //}
             
-            var sliderValue = new TimeSpan((long) theSlider.Value);
-            for (int i = 0; i < _timesForNote.Count - 1; i++)
-            {
-                int theFirst = _timesForNote[i].Occurance.CompareTo(sliderValue);
-                int theSecond = _timesForNote[i + 1].Occurance.CompareTo(sliderValue);
-                if (theFirst == -1 && theSecond == 1)
-                {
-                    Textbox.Text = _timesForNote[i + 1].Note;
-                    _currentlyViewedSection = i + 1;
-                    break;
-                }
+            //var sliderValue = new TimeSpan((long) theSlider.Value);
+            //for (int i = 0; i < _timesForNote.Count - 1; i++)
+            //{
+            //    int theFirst = _timesForNote[i].Occurance.CompareTo(sliderValue);
+            //    int theSecond = _timesForNote[i + 1].Occurance.CompareTo(sliderValue);
+            //    if (theFirst == -1 && theSecond == 1)
+            //    {
+            //        Textbox.Text = _timesForNote[i + 1].Note;
+            //        _currentlyViewedSection = i + 1;
+            //        break;
+            //    }
 
-                if (i == 0 && _timesForNote[i].Occurance.CompareTo(sliderValue) == 1)
-                {
-                    Textbox.Text = _timesForNote[i].Note;
-                    _currentlyViewedSection = i;
-                    break;
-                }
-                Textbox.Text = _timesForNote[i + 1].Note;
-                _currentlyViewedSection = i + 1;
-            }
+            //    if (i == 0 && _timesForNote[i].Occurance.CompareTo(sliderValue) == 1)
+            //    {
+            //        Textbox.Text = _timesForNote[i].Note;
+            //        _currentlyViewedSection = i;
+            //        break;
+            //    }
+            //    Textbox.Text = _timesForNote[i + 1].Note;
+            //    _currentlyViewedSection = i + 1;
+            //}
            
         }
 
