@@ -121,7 +121,7 @@ namespace MicAndNotes
                 {
                     Dispatcher.BeginInvoke(new Action(() =>
                     {
-                        theSlider.Value = playBackStopwatch.ElapsedTicks;
+                        //theSlider.Value = playBackStopwatch.ElapsedTicks;
                         try
                         {
                             if (playBackStopwatch.Elapsed + playbackStartPoint < _timesForNote[counter].Occurance)
