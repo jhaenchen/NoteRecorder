@@ -450,6 +450,7 @@ namespace MicAndNotes
                 tickMarks.Add(timeNote.Occurance.Ticks);
             }
             theSlider.Ticks = tickMarks;
+            theSlider.UpdateLayout();
         }
     }
 }
