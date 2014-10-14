@@ -5,7 +5,7 @@
     <Grid Background="#FF5F5151" Margin="0,0,-6.2,-3">
         <TextBox x:Name="Textbox" HorizontalAlignment="Left" Height="441" Margin="15,45,0,0" VerticalAlignment="Top" Width="1003" TextWrapping="Wrap"
 VerticalScrollBarVisibility="Visible"
-AcceptsReturn="True" KeyUp="TextBox_KeyUp" IsEnabled="False" Text="Hit Record first."/>
+AcceptsReturn="True" KeyUp="TextBox_KeyUp" IsEnabled="False" Text="Hit Record or Open first."/>
         <Button x:Name="RecordButton" Content="Record" HorizontalAlignment="Left" Margin="290,555,0,0" VerticalAlignment="Top" Width="75" Click="RecordButton_Click"/>
         <Button x:Name="PlayBackButton" Content="Playback" HorizontalAlignment="Left" Margin="536,555,0,0" VerticalAlignment="Top" Width="75" Click="PlayBackButton_Click"/>
         <Button x:Name="StopRecordingButton" Content="Stop Recording" HorizontalAlignment="Left" Margin="370,555,0,0" VerticalAlignment="Top" Width="111" Click="StopRecordingButton_Click"/>
