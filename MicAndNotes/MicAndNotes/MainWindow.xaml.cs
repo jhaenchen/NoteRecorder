@@ -179,12 +179,16 @@ namespace MicAndNotes
 
             string textArchive = _textBackup;
 
-            //var forPlayback = new ForUseByBackgroundWorker(toStart, _savedRecordingAs);
-
             _classPlayer.Open(new Uri(_savedRecordingAs));
             // play.Open(new Uri(@"C:\SAMProjects\NoteRecorder\MicAndNotes\MicAndNotes\bin\Release6f6e0b14-623b-4c87-9cfd-eb3cf49fbf0c.wav"));
             _classPlayer.Position = toStart;
             _classPlayer.Play();
+
+            //var play = new MediaPlayer();
+
+            //play.Open(new Uri(forPlayback.filePath));
+            //play.Position = forPlayback.Span;
+            //play.Play();
 
 
             //bw.RunWorkerAsync(forPlayback);
@@ -200,14 +204,15 @@ namespace MicAndNotes
                 {
                     Dispatcher.BeginInvoke(new Action(() =>
                     {
-                        theSlider.Value = playBackStopwatch.ElapsedTicks;
+                        //theSlider.Value = playBackStopwatch.ElapsedTicks;
                         try
                         {
                             if (playBackStopwatch.Elapsed + toStart < _timesForNote[counter].Occurance)
                             {
                                 Textbox.Text = _timesForNote[counter].Note;
-                                //theSlider.Value = _timesForNote[counter].Occurance.Ticks;
                                 _currentlyViewedSection = counter;
+                                theSlider.Value = _timesForNote[counter].Occurance.Ticks;
+
                             }
                             else
                             {
@@ -217,10 +222,10 @@ namespace MicAndNotes
                         catch (Exception)
                         {
                             _shouldContinue = false;
-                            Textbox.Text = textArchive;
-                            Textbox.ScrollToEnd();
-                            theSlider.Value = 0;
-                            _currentlyViewedSection = -1;
+                            //Textbox.Text = textArchive;
+                            //Textbox.ScrollToEnd();
+                            //theSlider.Value = 0;
+                            //_currentlyViewedSection = -1;
                         }
                     }));
                     Thread.Sleep(1);
