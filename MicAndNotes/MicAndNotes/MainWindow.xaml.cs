@@ -231,17 +231,17 @@ namespace MicAndNotes
 
         private void theSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            //if (Textbox.Text != _textBackup && _currentlyViewedSection != -1)
-            //{
-            //    if (_timesForNote[_currentlyViewedSection].Note != Textbox.Text)
-            //    {
-            //        _timesForNote[_currentlyViewedSection].Note = Textbox.Text + "\n";
+            if (Textbox.Text != _textBackup && !_shouldContinue)
+            {
+                if (_timesForNote[_currentlyViewedSection].Note != Textbox.Text)
+                {
+                    _timesForNote[_currentlyViewedSection].Note = Textbox.Text + "\n";
 
 
-            //        string newBackup = _timesForNote.Aggregate("", (current, t) => current + t.Note);
-            //        _textBackup = newBackup;
-            //    }
-            //}
+                    string newBackup = _timesForNote.Aggregate("", (current, t) => current + t.Note);
+                    _textBackup = newBackup;
+                }
+            }
             if (theSlider.IsFocused)
             {
                 var sliderValue = new TimeSpan((long)theSlider.Value);
