@@ -440,6 +440,16 @@ namespace MicAndNotes
             mciSendString("close recsound ", "", 0, 0);
             theSlider.Maximum = _timesForNote.Last().Occurance.Ticks;
             _textBackup = Textbox.Text;
+
+
+
+
+            DoubleCollection tickMarks = new DoubleCollection();
+            foreach (var timeNote in _timesForNote)
+            {
+                tickMarks.Add(timeNote.Occurance.Ticks);
+            }
+            theSlider.Ticks = tickMarks;
         }
     }
 }
