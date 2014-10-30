@@ -76,19 +76,6 @@ namespace MicAndNotes
             }
         }
 
-        private void RecordButton_Click(object sender, RoutedEventArgs e)
-        {
-            Textbox.Text = "";
-            Textbox.IsEnabled = true;
-            RecordingIcon.Visibility = Visibility.Visible;
-            mciSendString("open new Type waveaudio Alias recsound", "", 0, 0);
-            _recordingTimer.Start();
-            mciSendString("record recsound", "", 0, 0);
-        }
-
-
-        
-
         private void PlayBackButton_Click(object sender, RoutedEventArgs e)
         {
             string textArchive = _textBackup;
@@ -381,28 +368,6 @@ namespace MicAndNotes
             Close();
         }
 
-        private void ToolbarRecord_Click(object sender, RoutedEventArgs e)
-        {
-            Textbox.Text = "";
-            Textbox.IsEnabled = true;
-            RecordingIcon.Visibility = Visibility.Visible;
-            mciSendString("open new Type waveaudio Alias recsound", "", 0, 0);
-            _recordingTimer.Start();
-            mciSendString("record recsound", "", 0, 0);
-        }
-
-        private void ToolbarStopRecording_Click(object sender, RoutedEventArgs e)
-        {
-            RecordingIcon.Visibility = Visibility.Hidden;
-            string savedFileName = Guid.NewGuid().ToString();
-            _savedRecordingAs = Environment.CurrentDirectory + savedFileName + ".wav";
-            _recordingTimer.Stop();
-            _recordingDuration = _recordingTimer.Elapsed.Ticks;
-            mciSendString("save recsound " + Environment.CurrentDirectory + savedFileName + ".wav", "", 0, 0);
-            mciSendString("close recsound ", "", 0, 0);
-            theSlider.Maximum = _recordingDuration;
-            _textBackup = Textbox.Text;
-        }
 
         private void ToolbarSaveAs_Click(object sender, RoutedEventArgs e)
         {
@@ -424,7 +389,17 @@ namespace MicAndNotes
             File.Move(zipFileName.ToString(), saveFileDialog1.FileName + ".nr");
         }
 
-        private void StopRecordingButton_Click(object sender, RoutedEventArgs e)
+        private void StartRecording(object sender, RoutedEventArgs e)
+        {
+            Textbox.Text = "";
+            Textbox.IsEnabled = true;
+            RecordingIcon.Visibility = Visibility.Visible;
+            mciSendString("open new Type waveaudio Alias recsound", "", 0, 0);
+            _recordingTimer.Start();
+            mciSendString("record recsound", "", 0, 0);
+        }
+
+        private void StopRecording(object sender, RoutedEventArgs e)
         {
             RecordingIcon.Visibility = Visibility.Hidden;
             string savedFileName = Guid.NewGuid().ToString();

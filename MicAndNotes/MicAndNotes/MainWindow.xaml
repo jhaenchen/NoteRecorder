@@ -6,9 +6,9 @@
         <TextBox x:Name="Textbox" HorizontalAlignment="Left" Height="441" Margin="15,45,0,0" VerticalAlignment="Top" Width="1003" TextWrapping="Wrap"
 VerticalScrollBarVisibility="Visible"
 AcceptsReturn="True" KeyUp="TextBox_KeyUp" IsEnabled="False" Text="Hit Record or Open first."/>
-        <Button x:Name="RecordButton" Content="Record" HorizontalAlignment="Left" Margin="290,555,0,0" VerticalAlignment="Top" Width="75" Click="RecordButton_Click"/>
+        <Button x:Name="RecordButton" Content="Record" HorizontalAlignment="Left" Margin="290,555,0,0" VerticalAlignment="Top" Width="75" Click="StartRecording"/>
         <Button x:Name="PlayBackButton" Content="Playback" HorizontalAlignment="Left" Margin="536,555,0,0" VerticalAlignment="Top" Width="75" Click="PlayBackButton_Click"/>
-        <Button x:Name="StopRecordingButton" Content="Stop Recording" HorizontalAlignment="Left" Margin="370,555,0,0" VerticalAlignment="Top" Width="111" Click="StopRecordingButton_Click"/>
+        <Button x:Name="StopRecordingButton" Content="Stop Recording" HorizontalAlignment="Left" Margin="370,555,0,0" VerticalAlignment="Top" Width="111" Click="StopRecording"/>
         <Button x:Name="FromCursor" Content="From Cursor" HorizontalAlignment="Left" Margin="616,555,0,0" VerticalAlignment="Top" Width="107" Click="FromCursor_Click"/>
         <Slider x:Name="theSlider" HorizontalAlignment="Left" Margin="346,508,0,0" VerticalAlignment="Top" Height="42" Width="417" ValueChanged="theSlider_ValueChanged"/>
         <Image x:Name="RecordingIcon" HorizontalAlignment="Left" Height="32" Margin="21,508,0,0" VerticalAlignment="Top" Width="44" Source="Images/recording.png" Visibility="Hidden"/>
@@ -21,8 +21,8 @@ AcceptsReturn="True" KeyUp="TextBox_KeyUp" IsEnabled="False" Text="Hit Record or
                 <MenuItem x:Name="ToolbarClose" Header="_Close" Click="ToolbarClose_Click"/>
             </MenuItem>
             <MenuItem Header="_Recording">
-                <MenuItem x:Name="ToolbarRecord" Header="Start Recording" Click="ToolbarRecord_Click" />
-                <MenuItem x:Name="ToolbarStopRecording"  Header="Stop Recording" Click="ToolbarStopRecording_Click"  />
+                <MenuItem x:Name="ToolbarRecord" Header="Start Recording" Click="StartRecording" />
+                <MenuItem x:Name="ToolbarStopRecording"  Header="Stop Recording" Click="StopRecording"  />
             </MenuItem>
         </Menu>
         
