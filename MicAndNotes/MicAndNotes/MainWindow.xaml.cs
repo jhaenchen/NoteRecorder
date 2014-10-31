@@ -32,7 +32,6 @@ namespace MicAndNotes
         private bool _shouldContinue = true;
         private string _textBackup;
         private List<TimeNote> _timesForNote = new List<TimeNote>();
-        private bool _wasLastKeyEnter;
         private string _currentOpenNoteLocation;
         private SaveObject _currentSave;
 
@@ -51,12 +50,14 @@ namespace MicAndNotes
             int hwndCallback);
 
 
+        private bool _wasLastKeyEnter;
+
         private void TextBox_KeyUp(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Enter && _wasLastKeyEnter)
             {
-                string toStore = Textbox.Text;
-                if (_lastTextFilled != "")
+                var toStore = Textbox.Text;
+                if (!string.IsNullOrEmpty(_lastTextFilled))
                 {
                     toStore = Textbox.Text.Replace(_lastTextFilled, String.Empty);
                 }
@@ -66,13 +67,9 @@ namespace MicAndNotes
                 _timesForNote.Add(new TimeNote(_recordingTimer.Elapsed, toStore));
                 _wasLastKeyEnter = false;
             }
-            else if (e.Key == Key.Enter)
-            {
-                _wasLastKeyEnter = true;
-            }
             else
             {
-                _wasLastKeyEnter = false;
+                _wasLastKeyEnter = e.Key == Key.Enter;
             }
         }
 
